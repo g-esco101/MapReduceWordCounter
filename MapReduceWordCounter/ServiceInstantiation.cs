@@ -7,7 +7,7 @@ namespace MapReduceWordCounter
 {
     public class ServiceInstantiation
     {
-        // Returns the methods of a service instance. Similar to pages 167 & 168 in Service-Oriented Computing and System Integration 6th ed by Yinong Chen.
+        // Returns the methods of a service instance. 
         public string[] getMethodNames(object serviceInstance)
         {
             string names = " ";
@@ -32,7 +32,6 @@ namespace MapReduceWordCounter
         }
 
         // Given the URL of the WSDL, creates & returns an instance of the service. Note each endpoint is a method & these services only contain one method.
-        // Similar to page 168 in Service-Oriented Computing and System Integration 6th ed by Yinong Chen.
         public object instantiateService(string wsdlUrl)
         {
             object serviceInstance = null;

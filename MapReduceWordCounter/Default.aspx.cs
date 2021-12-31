@@ -15,9 +15,10 @@ namespace MapReduceWordCounter
 
         }
 
-        // Uploads file & stores its entire contents into a string array
+        // Reads file & stores its entire contents into a string array
         protected void UploadButton_Click(object sender, EventArgs e)
         {
+            char[] delimiterChars = { ' ', '\n' };
             Counted.Text = "";
             totalWords.Text = "";
             if (FileUpload1.HasFile)
@@ -25,16 +26,13 @@ namespace MapReduceWordCounter
                 try
                 {
                     string filename = Path.GetFileName(FileUpload1.FileName);
-                    string path = Server.MapPath("~/") + "Files/";
-                    if (!Directory.Exists(path))
+                    using (StreamReader reader = new StreamReader(FileUpload1.PostedFile.InputStream))
                     {
-                        Directory.CreateDirectory(path);
+                        string[] allWords = reader.ReadToEnd().Split(delimiterChars);
+                        Session["allwords"] = allWords;
+                        Status.Text = filename + " read successfully";
+                        PrepWork();
                     }
-                    FileUpload1.SaveAs(path + filename);
-                    Status.Text = filename + " uploaded successfully";
-                    string[] allWords = new StreamReader(path + filename).ReadToEnd().Split(' ', '\n');
-                    Session["allwords"] = allWords;
-                    MapReduce();
                 }
                 catch (Exception ex)
                 {
@@ -45,7 +43,7 @@ namespace MapReduceWordCounter
         }
 
         // Initializes the name node, & displays the final results.
-        private void MapReduce()
+        private void PrepWork()
         {
             int threadNumber = 1;
             string[] allWords = (string[])Session["allwords"];
@@ -62,7 +60,7 @@ namespace MapReduceWordCounter
                 threadNumber = 1;   // Error: thread count will be assigned 1; it must be greater than 0.
             }
             NameNode namenode = new NameNode(TextBoxMap.Text, TextBoxReduce.Text, TextBoxCombiner.Text, allWords, threadNumber);
-            Counted.Text = namenode.allocate().ToString();
+            Counted.Text = namenode.Allocate().ToString();
             try
             {
                 totalWords.Text = allWords.Length.ToString();

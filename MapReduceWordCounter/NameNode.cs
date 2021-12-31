@@ -29,7 +29,7 @@ namespace MapReduceWordCounter
         // Partitions all the words in the file into a number of arrays that is equal to the 
         // thread count & distributes those arrays to a task tracker whose operations
         // are executed in parallel via multi-threading.
-        public int allocate()
+        public int Allocate()
         {
             int subStringLength = 0;
             int lastSubStringLength = 0;
@@ -45,7 +45,7 @@ namespace MapReduceWordCounter
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine("NameNode.allocate 1st Try ex.Message is " + ex.Message);
+                System.Diagnostics.Debug.WriteLine("NameNode.Allocate 1st Try ex.Message is " + ex.Message);
             }
             threadArray = new Thread[threadNumber];
             for (int i = 0; i < threadNumber; i++)
@@ -65,7 +65,7 @@ namespace MapReduceWordCounter
                 }
                 catch (Exception ex)
                 {
-                    System.Diagnostics.Debug.WriteLine("NameNode.allocate 2nd Try ex.Message is " + ex.Message);
+                    System.Diagnostics.Debug.WriteLine("NameNode.Allocate 2nd Try ex.Message is " + ex.Message);
                 }
                 TaskTracker tasker = new TaskTracker();
                 threadArray[i] = new Thread(() => {
