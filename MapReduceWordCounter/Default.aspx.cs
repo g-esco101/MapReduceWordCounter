@@ -43,6 +43,10 @@ namespace MapReduceWordCounter
                     }
 
                 }
+                catch (ServiceException se)
+                {
+                    Status.Text = "Error - " + se.Message;
+                }
                 catch (Exception ex)
                 {
                     Status.Text = "Error - " + ex.Message;

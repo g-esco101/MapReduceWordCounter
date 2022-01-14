@@ -27,10 +27,10 @@ namespace MapReduceWordCounter
                 methodInformation = serviceInstance.GetType().GetMethod(methodNames[0]);
                 mapReturn = (IDictionary<string, int>)methodInformation.Invoke(serviceInstance, parameters);
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine("TaskTracker - Map - exception message: " + ex.Message);
 
+                throw new ServiceException($"Exception with map service: {wsdlUri}. Alternative: use the default service.", ex);
                 // If the service that the user inputs fails, use default service.
 //                wsdlUri = "http://localhost:64890/Service1.svc";
 //                serviceInstance = serviceIntantiator.instantiateService(wsdlUri);
