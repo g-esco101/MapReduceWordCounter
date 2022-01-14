@@ -51,6 +51,7 @@ C:\Users\LeonardoDaVinci\Desktop\MapReduceWordCounter\MapReduceWordCounter\bin\M
 C:\Users\LeonardoDaVinci\Desktop\MapReduceWordCounter\MapReduceWordCounter\obj\Debug\MapReduceWordCounter.csproj.CopyComplete
 C:\Users\LeonardoDaVinci\Desktop\MapReduceWordCounter\MapReduceWordCounter\obj\Debug\MapReduceWordCounter.dll
 C:\Users\LeonardoDaVinci\Desktop\MapReduceWordCounter\MapReduceWordCounter\obj\Debug\MapReduceWordCounter.pdb
+C:\dev\NET\MapReduceWordCounter\MapReduceWordCounter\obj\Debug\MapReduceWordCounter.csproj.CoreCompileInputs.cache
 C:\dev\NET\MapReduceWordCounter\MapReduceWordCounter\bin\MapReduceWordCounter.dll.config
 C:\dev\NET\MapReduceWordCounter\MapReduceWordCounter\bin\MapReduceWordCounter.dll
 C:\dev\NET\MapReduceWordCounter\MapReduceWordCounter\bin\MapReduceWordCounter.pdb
@@ -92,14 +93,12 @@ C:\dev\NET\MapReduceWordCounter\MapReduceWordCounter\bin\Microsoft.Web.Infrastru
 C:\dev\NET\MapReduceWordCounter\MapReduceWordCounter\bin\Newtonsoft.Json.dll
 C:\dev\NET\MapReduceWordCounter\MapReduceWordCounter\bin\System.Web.Optimization.dll
 C:\dev\NET\MapReduceWordCounter\MapReduceWordCounter\bin\WebGrease.dll
-C:\dev\NET\MapReduceWordCounter\MapReduceWordCounter\bin\DynamicProxyLibrary.pdb
 C:\dev\NET\MapReduceWordCounter\MapReduceWordCounter\bin\System.Web.Optimization.xml
 C:\dev\NET\MapReduceWordCounter\MapReduceWordCounter\bin\Newtonsoft.Json.xml
 C:\dev\NET\MapReduceWordCounter\MapReduceWordCounter\bin\Antlr3.Runtime.pdb
 C:\dev\NET\MapReduceWordCounter\MapReduceWordCounter\bin\Microsoft.AspNet.FriendlyUrls.xml
 C:\dev\NET\MapReduceWordCounter\MapReduceWordCounter\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
-C:\dev\NET\MapReduceWordCounter\MapReduceWordCounter\obj\Debug\MapReduceWordCounter.csproj.AssemblyReference.cache
-C:\dev\NET\MapReduceWordCounter\MapReduceWordCounter\obj\Debug\MapReduceWordCounter.csproj.CoreCompileInputs.cache
 C:\dev\NET\MapReduceWordCounter\MapReduceWordCounter\obj\Debug\MapReduceWordCounter.csproj.CopyComplete
 C:\dev\NET\MapReduceWordCounter\MapReduceWordCounter\obj\Debug\MapReduceWordCounter.dll
 C:\dev\NET\MapReduceWordCounter\MapReduceWordCounter\obj\Debug\MapReduceWordCounter.pdb
+C:\dev\NET\MapReduceWordCounter\MapReduceWordCounter\obj\Debug\MapReduceWordCounter.csproj.AssemblyReference.cache

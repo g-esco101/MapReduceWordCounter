@@ -11,23 +11,16 @@ namespace MapReduceWordCounter
         public string[] getMethodNames(object serviceInstance)
         {
             string names = " ";
-            try
+            MethodInfo[] methodInformation = serviceInstance.GetType().GetMethods();
+            foreach (MethodInfo info in methodInformation)
             {
-                MethodInfo[] methodInformation = serviceInstance.GetType().GetMethods();
-                foreach (MethodInfo info in methodInformation)
+                if (info.Name == "get_ChannelFactory")
                 {
-                    if (info.Name == "get_ChannelFactory")
-                    {
-                        break;
-                    }
-                    names += info.Name + ' ';
+                    break;
                 }
-                names = names.Trim();
+                names += info.Name + ' ';
             }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine("ServiceInstantiation.getMethodNames ex.Message is " + ex.Message);
-            }
+            names = names.Trim();
             return names.Split(' ');
         }
 
@@ -35,18 +28,11 @@ namespace MapReduceWordCounter
         public object instantiateService(string wsdlUrl)
         {
             object serviceInstance = null;
-            try
+            DynamicProxyFactory proxyFactory = new DynamicProxyFactory(wsdlUrl);
+            foreach (ServiceEndpoint ep in proxyFactory.Endpoints)
             {
-                DynamicProxyFactory proxyFactory = new DynamicProxyFactory(wsdlUrl);
-                foreach (ServiceEndpoint ep in proxyFactory.Endpoints)
-                {
-                    DynamicProxy proxy = proxyFactory.CreateProxy(ep);
-                    serviceInstance = proxy.ObjectInstance;
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine("ServiceInstantiation.instantiateService ex.Message is " + ex.Message);
+                DynamicProxy proxy = proxyFactory.CreateProxy(ep);
+                serviceInstance = proxy.ObjectInstance;
             }
             return serviceInstance;
         }

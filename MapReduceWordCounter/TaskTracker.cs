@@ -1,46 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading;
 
 namespace MapReduceWordCounter
 {
     public class TaskTracker
     {
-        // Calls Map & Reduce functions.
-        public IDictionary<string, int> MapReduce(string mapUrl, string reduceUrl, string[] wordsArray)
-        {
-            return Reduce(reduceUrl, Map(mapUrl, wordsArray));
-        }
-
         // Dynamically binds to map service. 
         // Given the URL of the map service's wsdl & an array of strings, it returns IDictionary<string, int> where string is a word in wordArray
         // & int is the number of times that word appears in the array. 
         public IDictionary<string, int> Map(string wsdlUri, string[] wordArray)
         {
+            System.Diagnostics.Debug.WriteLine("Thread id - Map - " + Thread.CurrentThread.ManagedThreadId.ToString());
             ServiceInstantiation serviceIntantiator = new ServiceInstantiation();
             IDictionary<string, int> mapReturn = new Dictionary<string, int>();
-            object serviceInstance = serviceIntantiator.instantiateService(wsdlUri);
             MethodInfo methodInformation = null;
+            object serviceInstance = null;
+            string[] methodNames = null;
+            Object[] parameters = new Object[1];
+            parameters[0] = wordArray;
             try
             {
-                string[] methodNames = serviceIntantiator.getMethodNames(serviceInstance);
+                serviceInstance = serviceIntantiator.instantiateService(wsdlUri);
+                methodNames = serviceIntantiator.getMethodNames(serviceInstance);
                 methodInformation = serviceInstance.GetType().GetMethod(methodNames[0]);
+                mapReturn = (IDictionary<string, int>)methodInformation.Invoke(serviceInstance, parameters);
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine("TaskTracker.Map 1st Try ex.Message is " + ex.Message);
-            }
-            Object[] parames = new Object[1];
-            parames[0] = wordArray;
+                System.Diagnostics.Debug.WriteLine("TaskTracker - Map - exception message: " + ex.Message);
 
-            try
-            {
-                mapReturn = (IDictionary<string, int>)methodInformation.Invoke(serviceInstance, parames);
-            }
-            catch (Exception ex)
-            {
-                mapReturn.Add("MAP ERROR", 0);
-                System.Diagnostics.Debug.WriteLine("TaskTracker.Map 2nd Try ex.Message is " + ex.Message);
+                // If the service that the user inputs fails, use default service.
+//                wsdlUri = "http://localhost:64890/Service1.svc";
+//                serviceInstance = serviceIntantiator.instantiateService(wsdlUri);
+//                methodNames = serviceIntantiator.getMethodNames(serviceInstance);
+//                methodInformation = serviceInstance.GetType().GetMethod(methodNames[0]);
+//                mapReturn = (IDictionary<string, int>)methodInformation.Invoke(serviceInstance, parameters);
 
             }
             return mapReturn;
@@ -51,30 +47,24 @@ namespace MapReduceWordCounter
         // & int is the number of times that word appears in the array. 
         public IDictionary<string, int> Reduce(string wsdlUri, IDictionary<string, int> wordCountDictionary)
         {
+            System.Diagnostics.Debug.WriteLine("Thread id - Reduce - " + Thread.CurrentThread.ManagedThreadId.ToString());
             ServiceInstantiation serviceIntantiator = new ServiceInstantiation();
             IDictionary<string, int> reduceReturn = new Dictionary<string, int>();
-            object serviceInstance = serviceIntantiator.instantiateService(wsdlUri);
             MethodInfo methodInformation = null;
+            object serviceInstance = null;
+            Object[] parameters = new Object[1];
+            parameters[0] = wordCountDictionary;
             try
             {
+                serviceInstance = serviceIntantiator.instantiateService(wsdlUri);
                 string[] methodNames = serviceIntantiator.getMethodNames(serviceInstance);
                 methodInformation = serviceInstance.GetType().GetMethod(methodNames[0]);
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine("TaskTracker.Reduce 1st Try ex.Message is " + ex.Message);
-            }
-            Object[] parames = new Object[1];
-            parames[0] = wordCountDictionary;
+                reduceReturn = (IDictionary<string, int>)methodInformation.Invoke(serviceInstance, parameters);
 
-            try
-            {
-                reduceReturn = (IDictionary<string, int>)methodInformation.Invoke(serviceInstance, parames);
             }
             catch (Exception ex)
             {
-                reduceReturn.Add("REDUCE ERROR", 0);
-                System.Diagnostics.Debug.WriteLine("TaskTracker.Reduce 2nd Try ex.Message is " + ex.Message);
+                System.Diagnostics.Debug.WriteLine("TaskTracker - Reduce - exception message: " + ex.Message);
             }
             return reduceReturn;
         }

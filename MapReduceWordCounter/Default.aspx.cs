@@ -25,14 +25,23 @@ namespace MapReduceWordCounter
             {
                 try
                 {
-                    string filename = Path.GetFileName(FileUpload1.FileName);
-                    using (StreamReader reader = new StreamReader(FileUpload1.PostedFile.InputStream))
+                    string fileName = Path.GetFileName(FileUpload1.FileName);
+                    string extension = Path.GetExtension(fileName);
+                    if (extension == ".txt" || extension == ".doc" || extension == ".pdf" || extension == ".docx")
                     {
-                        string[] allWords = reader.ReadToEnd().Split(delimiterChars);
-                        Session["allwords"] = allWords;
-                        Status.Text = filename + " read successfully";
-                        PrepWork();
+                        using (StreamReader reader = new StreamReader(FileUpload1.PostedFile.InputStream))
+                        {
+                            string[] allWords = reader.ReadToEnd().Split(delimiterChars);
+                            Session["allwords"] = allWords;
+                            Status.Text = fileName + " read successfully";
+                            CountWords();
+                        }
+                    } else
+                    {
+                        Status.Text = "Error - please use one of the following file types: txt, doc, docx, or pdf.";
+                        return;
                     }
+
                 }
                 catch (Exception ex)
                 {
@@ -43,32 +52,34 @@ namespace MapReduceWordCounter
         }
 
         // Initializes the name node, & displays the final results.
-        private void PrepWork()
+        private void CountWords()
         {
-            int threadNumber = 1;
+            int partitions;
             string[] allWords = (string[])Session["allwords"];
             try
             {
-                threadNumber = Convert.ToInt32(threadCount.Text);
+                partitions = Convert.ToInt32(threadCount.Text);
             }
             catch
             {
-                System.Diagnostics.Debug.WriteLine("Error: thread count will be assigned 1.");
+                partitions = 1;
+                //System.Diagnostics.Debug.WriteLine("Error: thread count will be assigned 1.");
             }
-            if (threadNumber <= 0)
+            if (partitions <= 0)
             {
-                threadNumber = 1;   // Error: thread count will be assigned 1; it must be greater than 0.
+                partitions = 1;   // Error: thread count will be assigned 1; it must be greater than 0.
             }
-            NameNode namenode = new NameNode(TextBoxMap.Text, TextBoxReduce.Text, TextBoxCombiner.Text, allWords, threadNumber);
+            NameNode namenode = new NameNode(TextBoxMap.Text, TextBoxReduce.Text, TextBoxCombiner.Text, allWords, partitions);
             Counted.Text = namenode.Allocate().ToString();
-            try
-            {
-                totalWords.Text = allWords.Length.ToString();
-            }
-            catch (Exception ex)
-            {
-                totalWords.Text = "error - " + ex.Message;
-            }
+            totalWords.Text = allWords.Length.ToString();
+            //try
+            //{
+            //    totalWords.Text = allWords.Length.ToString();
+            //}
+            //catch (Exception ex)
+            //{
+            //    totalWords.Text = "error - " + ex.Message;
+            //}
         }
     }
 }

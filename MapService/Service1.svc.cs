@@ -6,25 +6,18 @@ namespace MapService
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerCall)]
     public class Service1 : IService1
     {
-        // Maps an array of words to a dictionary of key-value pairs where
+        // Maps an array of words to a dictionary where
         // each word is a key & the value is the number of times the word occurs in wordsArray. 
         public IDictionary<string, int> MapFunction(string[] wordsArray)
         {
             IDictionary<string, int> mapReturn = new Dictionary<string, int>();
-            try
+            foreach (string word in wordsArray)
             {
-                foreach (string word in wordsArray)
+                if (mapReturn.ContainsKey(word))
                 {
-                    if (mapReturn.ContainsKey(word))
-                    {
-                        mapReturn[word] = mapReturn[word] + 1;
-                    }
-                    else mapReturn.Add(word, 1);
+                    mapReturn[word] = mapReturn[word] + 1;
                 }
-            }
-            catch
-            {
-                mapReturn.Add("MAP SERVICE ERROR", 0);
+                else mapReturn.Add(word, 1);
             }
             return mapReturn;
         }
