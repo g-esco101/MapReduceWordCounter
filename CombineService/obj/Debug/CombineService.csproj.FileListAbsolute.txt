@@ -11,3 +11,4 @@ C:\dev\NET\MapReduceWordCounter\CombineService\bin\CombineService.pdb
 C:\dev\NET\MapReduceWordCounter\CombineService\obj\Debug\CombineService.csproj.CoreCompileInputs.cache
 C:\dev\NET\MapReduceWordCounter\CombineService\obj\Debug\CombineService.dll
 C:\dev\NET\MapReduceWordCounter\CombineService\obj\Debug\CombineService.pdb
+C:\dev\NET\MapReduceWordCounter\CombineService\obj\Debug\CombineService.csproj.AssemblyReference.cache

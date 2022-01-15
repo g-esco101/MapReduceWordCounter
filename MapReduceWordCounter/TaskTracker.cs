@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Threading;
 
 namespace MapReduceWordCounter
 {
@@ -12,7 +11,6 @@ namespace MapReduceWordCounter
         // & int is the number of times that word appears in the array. 
         public IDictionary<string, int> Map(string wsdlUri, string[] wordArray)
         {
-            System.Diagnostics.Debug.WriteLine("Thread id - Map - " + Thread.CurrentThread.ManagedThreadId.ToString());
             ServiceInstantiation serviceIntantiator = new ServiceInstantiation();
             IDictionary<string, int> mapReturn = new Dictionary<string, int>();
             MethodInfo methodInformation = null;
@@ -29,15 +27,7 @@ namespace MapReduceWordCounter
             }
             catch(Exception ex)
             {
-
-                throw new ServiceException($"Exception with map service: {wsdlUri}. Alternative: use the default service.", ex);
-                // If the service that the user inputs fails, use default service.
-//                wsdlUri = "http://localhost:64890/Service1.svc";
-//                serviceInstance = serviceIntantiator.instantiateService(wsdlUri);
-//                methodNames = serviceIntantiator.getMethodNames(serviceInstance);
-//                methodInformation = serviceInstance.GetType().GetMethod(methodNames[0]);
-//                mapReturn = (IDictionary<string, int>)methodInformation.Invoke(serviceInstance, parameters);
-
+                mapReturn.Add("MAP ERROR", -1);
             }
             return mapReturn;
         }
@@ -47,9 +37,13 @@ namespace MapReduceWordCounter
         // & int is the number of times that word appears in the array. 
         public IDictionary<string, int> Reduce(string wsdlUri, IDictionary<string, int> wordCountDictionary)
         {
-            System.Diagnostics.Debug.WriteLine("Thread id - Reduce - " + Thread.CurrentThread.ManagedThreadId.ToString());
-            ServiceInstantiation serviceIntantiator = new ServiceInstantiation();
             IDictionary<string, int> reduceReturn = new Dictionary<string, int>();
+            if (wordCountDictionary.ContainsKey("MAP ERROR"))
+            {
+                reduceReturn.Add("MAP ERROR", -1);
+                return reduceReturn;
+            }
+            ServiceInstantiation serviceIntantiator = new ServiceInstantiation();
             MethodInfo methodInformation = null;
             object serviceInstance = null;
             Object[] parameters = new Object[1];
@@ -60,11 +54,10 @@ namespace MapReduceWordCounter
                 string[] methodNames = serviceIntantiator.getMethodNames(serviceInstance);
                 methodInformation = serviceInstance.GetType().GetMethod(methodNames[0]);
                 reduceReturn = (IDictionary<string, int>)methodInformation.Invoke(serviceInstance, parameters);
-
             }
-            catch (Exception ex)
+            catch
             {
-                System.Diagnostics.Debug.WriteLine("TaskTracker - Reduce - exception message: " + ex.Message);
+                reduceReturn.Add("REDUCE ERROR", -2);
             }
             return reduceReturn;
         }

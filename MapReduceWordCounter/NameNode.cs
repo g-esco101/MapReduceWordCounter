@@ -66,6 +66,21 @@ namespace MapReduceWordCounter
                 });
                 threadArray[i].Start();
             }
+            for (int i = 0; i < partitions; i++)
+            {
+                threadArray[i].Join();
+            }
+            foreach (int val in this.reduceOutput.Values)
+            {
+                if (val == -1)
+                {
+                    throw new ServiceException($"Exception with map service: {mapWsdlUrl}. Alternative: use the default service.");
+                }
+                else if(val == -2)
+                {
+                    throw new ServiceException($"Exception with reduce service: {reduceWsdlUrl}. Alternative: use the default service.");
+                }
+            }
             return CombineFunction(combineWsdlUrl);
         }
 
@@ -73,18 +88,21 @@ namespace MapReduceWordCounter
         // Given the URL of the CombineService's wsdl, it returns the number of words in the uploaded file.
         public int CombineFunction(string combineWsdlUrl)
         {
-            for (int i = 0; i < partitions; i++)
-            {
-                threadArray[i].Join();
-            }
-            ServiceInstantiation serviceIntantiator = new ServiceInstantiation();
-            object serviceInstance = serviceIntantiator.instantiateService(combineWsdlUrl);
-            string[] methodNames = serviceIntantiator.getMethodNames(serviceInstance);
-            MethodInfo methodInfo = serviceInstance.GetType().GetMethod(methodNames[0]);
             Object[] parameters = new Object[1];
             IDictionary<string, int> newDictionary = this.reduceOutput.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             parameters[0] = newDictionary;
-            int combineReturn = (int)methodInfo.Invoke(serviceInstance, parameters);
+            ServiceInstantiation serviceIntantiator = new ServiceInstantiation();
+            int combineReturn = -1;
+            try
+            {
+                object serviceInstance = serviceIntantiator.instantiateService(combineWsdlUrl);
+                string[] methodNames = serviceIntantiator.getMethodNames(serviceInstance);
+                MethodInfo methodInfo = serviceInstance.GetType().GetMethod(methodNames[0]);
+                combineReturn = (int)methodInfo.Invoke(serviceInstance, parameters);
+            } catch
+            {
+                throw new ServiceException($"Exception with combine service: {combineWsdlUrl}. Alternative: use the default service.");
+            }
             return combineReturn;
         }
     }

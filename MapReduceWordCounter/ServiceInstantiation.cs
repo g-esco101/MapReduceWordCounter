@@ -2,6 +2,8 @@
 using System.Reflection;
 using System.ServiceModel.Description;
 using DynamicProxyLibrary;
+using System.Runtime.Serialization;
+using System.Xml;
 
 namespace MapReduceWordCounter
 {
@@ -31,6 +33,19 @@ namespace MapReduceWordCounter
             DynamicProxyFactory proxyFactory = new DynamicProxyFactory(wsdlUrl);
             foreach (ServiceEndpoint ep in proxyFactory.Endpoints)
             {
+                // Set binding limits
+                var binding = ep.Binding as System.ServiceModel.BasicHttpBinding;
+                binding.MaxBufferSize = 2147483647;
+                binding.MaxReceivedMessageSize = 2147483647;
+                binding.MaxBufferPoolSize = 2147483647;
+                XmlDictionaryReaderQuotas myReaderQuotas = new XmlDictionaryReaderQuotas();
+                myReaderQuotas.MaxStringContentLength = 2147483647;
+                myReaderQuotas.MaxNameTableCharCount = 2147483647;
+                myReaderQuotas.MaxArrayLength = 2147483647;
+                myReaderQuotas.MaxBytesPerRead = 2147483647;
+                myReaderQuotas.MaxDepth = 64;
+                binding.GetType().GetProperty("ReaderQuotas").SetValue(binding, myReaderQuotas, null);
+
                 DynamicProxy proxy = proxyFactory.CreateProxy(ep);
                 serviceInstance = proxy.ObjectInstance;
             }

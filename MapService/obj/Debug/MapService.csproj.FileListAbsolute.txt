@@ -10,3 +10,4 @@ C:\dev\NET\MapReduceWordCounter\MapService\bin\MapService.pdb
 C:\dev\NET\MapReduceWordCounter\MapService\obj\Debug\MapService.csproj.CoreCompileInputs.cache
 C:\dev\NET\MapReduceWordCounter\MapService\obj\Debug\MapService.dll
 C:\dev\NET\MapReduceWordCounter\MapService\obj\Debug\MapService.pdb
+C:\dev\NET\MapReduceWordCounter\MapService\obj\Debug\MapService.csproj.AssemblyReference.cache
