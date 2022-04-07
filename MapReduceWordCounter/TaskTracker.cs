@@ -33,8 +33,8 @@ namespace MapReduceWordCounter
         }
 
         // Dynamically binds to reduce service.
-        // Given the URL of the reduce service's wsdl & an array of strings, it returns IDictionary<string, int> where string is a word in wordArray
-        // & int is the number of times that word appears in the array. 
+        // Given the URL of the reduce service's wsdl & a dictionary where the key is a word and the value is its frequency,
+        // it returns a dictionary where the key is the thread id & the value is the total word count in the given dictionary.
         public IDictionary<string, int> Reduce(string wsdlUri, IDictionary<string, int> wordCountDictionary)
         {
             IDictionary<string, int> reduceReturn = new Dictionary<string, int>();

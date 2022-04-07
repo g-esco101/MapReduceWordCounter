@@ -70,6 +70,7 @@ namespace MapReduceWordCounter
             {
                 threadArray[i].Join();
             }
+            // Unable to pass exception info between threads at this time, so exception handling of services is placed here. 
             foreach (int val in this.reduceOutput.Values)
             {
                 if (val == -1)
